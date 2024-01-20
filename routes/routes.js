@@ -3,17 +3,18 @@ const path = require('path');
 const fs = require('fs');
 
 module.exports = app => {
-    // Require the JSON file and assign it to a variable called `dbData`
-    const dbData = require('../db/db.json');
-    
+    // Get all the saved notes from db.json and return the data as JSON
     app.get('/api/notes', (req, res) => {
-        // TODO: should read the db.json file and return all saved notes as JSON
-        fs.readFile(dbData, 'utf8', (err, data) => {
-            console.log('entered');
+        fs.readFile('db/db.json', 'utf8', (err, data) => {
             if (err) {
                 console.log(err);
             } else {
-                res.json(data);
+                // Successfully read file 
+                var notes = JSON.parse(data);
+                console.log(notes);
+
+                // return all the saved notes as JSON
+                res.json(notes);
             }
         });
     });
@@ -25,7 +26,7 @@ module.exports = app => {
 
     // GET /notes should return the notes.html file
     app.get('/notes', (req, res) => {
-        res.sendFile(path.join(__dirname, '../public/index.html'));
+        res.sendFile(path.join(__dirname, '../public/notes.html'));
     });
 
     // GET * should return the index.html file

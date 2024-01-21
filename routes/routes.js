@@ -1,40 +1,58 @@
-// Require npm package dependencies 
+/* Required npm package dependencies */
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const generateUniqueId = require('generate-unique-id');
 
 module.exports = app => {
-    // Static middleware for serving assets in the public folder
+    /* Add static middleware for serving assets in the public folder */
     app.use(express.static('public'));
 
-    // Middleware for parsing application/json and urlencoded data
+    /* Add middleware for parsing application/json and urlencoded data */
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
-    // Get all the saved notes from db.json and return the data as JSON
+    /**
+     * GET route to read the 'db.json' file and return all saved notes as JSON.
+     * 
+     * @name get/api/notes
+     * @param {string} path - Express path
+     * @param {callback} middleware - Express middleware
+     * @yields {Object} parsedNotes - All the existing notes in JSON format
+     */
     app.get('/api/notes', (req, res) => {
+        // Log the request to the terminal 
         console.info(`${req.method} request received to /api/notes endpoint.`);
 
+        // Obtain the existing notes 
         fs.readFile('db/db.json', 'utf8', (err, data) => {
             if (err) {
                 console.log(err);
             } else {
-                // Successfully read file 
-                var notes = JSON.parse(data);
+                // Parse the data as a JSON object after successfully reading the file
+                var parsedNotes = JSON.parse(data);
 
-                // Return all the saved notes as JSON
-                res.status(201).json(notes);
+                // Return all the saved notes as JSON with status code 200 
+                res.status(200).json(parsedNotes);
             }
         });
     });
     
-    // Receives a new note to add to db.json file and return the new note to the client.
+    /**
+     * POST route will add the new note recieved via the request body to 'db.json' and return the new note to the client.
+     * 
+     * @name post/api/notes
+     * @param {string} path - Express path
+     * @param {callback} middleware - Express middleware
+     * @yields {Object} newNote - the requested note to save
+     * @see writeToFile
+     */
     app.post('/api/notes', (req, res) => {
-        console.info(`${req.method} request received to /api/notes endpoint.`);
-
         // Destructuring assignment for the items in req.body
         const {title, text} = req.body;
+
+        // Log the request to the terminal 
+        console.info(`${req.method} request received to /api/notes endpoint. Creating a new note with title '${title}'...`);
 
         // Verify title and text is not empty 
         if (title && text) {
@@ -47,41 +65,54 @@ module.exports = app => {
                 })
             };
 
-            // Add the new note to the db.json file 
+            // Obtain the existing notes
             fs.readFile('db/db.json', 'utf8', (err, data) => {
                 if (err) {
                     console.log(err);
                 } else {
-                    // Successfully read file 
+                    // Add newNote to the end of the the parsedNotes array 
                     const parsedNotes = JSON.parse(data);
                     parsedNotes.push(newNote);
                     
                     // Update the db.json file with updated parseNotes
                     writeToFile(parsedNotes);
-
-                    console.info(`Successfully saved new note titled ${newNote.title}`);
                 }
             });
 
-            // Return the new note to the client 
-            res.status(201).json(newNote);
+            // Return the new note to the client with status code 201 Created
+            const response = {
+                status: 'success',
+                body: newNote,
+            };
+
+            res.status(201).json(response);
         } else { 
+            // Return a status code 400 Bad Request if request body is empty
             res.status(400).json('Request body must contain a body title and text.');
         }
-    })
+    });
 
-    // DELETE /api/notes/:id allows users to delete notes
-    
+    /**
+     * DELETE route should receive a query parameter that contains the id of a note to delete. 
+     * 
+     * @name delete/api/notes/:id
+     * @param {string} path - Express path
+     * @param {callback} middleware - Express middleware
+     * @yields {Object} filteredNotes - The existing notes after removing the requested id
+     * @see writeToFile
+     */
     app.delete('/api/notes/:id', (req, res) => {
+        // Store the requested ID to delete 
         const reqId = req.params.id;
-        console.info(`${req.method} request received to /api/notes/:id endpoint. Deleting he note with id '${reqId}'...`);
+
+        // Log the request to the terminal
+        console.info(`${req.method} request received to /api/notes/:id endpoint. Deleting the note with id '${reqId}'...`);
 
         // Obtain the existing notes
         fs.readFile('db/db.json', 'utf8', (err, data) => {
             if (err) {
                 console.log(err);
             } else {
-                // Parse the data as a JSON object after successfully reading the file
                 const parsedNotes = JSON.parse(data);
                 
                 // Filter out the note with the requested id
@@ -93,22 +124,30 @@ module.exports = app => {
 
                 // Update the db.json file with the modified notes object
                 writeToFile(filteredNotes);
+
+                // Send a message to the client 
+                const response = {
+                    status: 'success',
+                    body: filteredNotes
+                }
+
+                res.status(200).json(response);
             }
         });
     });
 
-    // GET /notes should return the notes.html file
+    /* GET route should return the notes.html file to present existing notes */
     app.get('/notes', (req, res) => {
         res.sendFile(path.join(__dirname, '../public/notes.html'));
     });
 
-    // GET * should return the index.html file
+    /* GET route should return the index.html file to present the landing page */
     app.get('*', (req, res) => {
         res.sendFile(path.join(__dirname, '../public/index.html'));
     });
 
     /**
-     * writeToFile() function will update the 'db/db.json' file with the given parsedNotes parameter
+     * @function writeToFile will update the 'db/db.json' file with the given parsedNotes parameter
      * @param {*} parsedNotes 
      */
     function writeToFile(parsedNotes) {

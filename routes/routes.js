@@ -5,6 +5,9 @@ const fs = require('fs');
 const generateUniqueId = require('generate-unique-id');
 
 module.exports = app => {
+    // Add a static middleware for serving assets in the public folder
+    app.use(express.static('public'));
+
     // Middleware for parsing application/json and urlencoded data
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
@@ -39,10 +42,9 @@ module.exports = app => {
             const newNote = {
                 title: title,
                 text: text,
-                noteId: generateUniqueId({
-                    length: 5,
-                    useLetters: false,
-                }),
+                id: generateUniqueId({
+                    length: 4
+                })
             };
 
             // Add the new note to the db.json file 
@@ -57,7 +59,7 @@ module.exports = app => {
                     // Write the new JSON object into db.json
                     fs.writeFile(
                         './db/db.json',
-                        JSON.stringify(parsedNotes, '\t'),
+                        JSON.stringify(parsedNotes, null, 4),
                         (writeErr) => {
                           writeErr
                             ? console.log(writeErr)

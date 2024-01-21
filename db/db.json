@@ -5,8 +5,23 @@
         "id": "abc1"
     },
     {
-        "title": "Module 11 Express",
-        "text": "Something here.",
-        "id": "njhj"
+        "title": "Grocery List",
+        "text": "Eggs, milk, butter, juice, bread",
+        "id": "pbi9"
+    },
+    {
+        "title": "TODO List",
+        "text": "take out the trash, mop the floors, clean bathroom",
+        "id": "d24c"
+    },
+    {
+        "title": "Express.js Assignment ",
+        "text": "Objective: Note Taking Application \nDue: Thursday",
+        "id": "0v3v"
+    },
+    {
+        "title": "Goals ",
+        "text": "Try a new recipe every week \nGo to the gym 5 times a week ",
+        "id": "c66q"
     }
 ]

@@ -1,11 +1,11 @@
-// Require path and fs packages 
+// Require npm package dependencies 
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const generateUniqueId = require('generate-unique-id');
 
 module.exports = app => {
-    // Add a static middleware for serving assets in the public folder
+    // Static middleware for serving assets in the public folder
     app.use(express.static('public'));
 
     // Middleware for parsing application/json and urlencoded data
@@ -24,7 +24,7 @@ module.exports = app => {
                 var notes = JSON.parse(data);
 
                 // Return all the saved notes as JSON
-                res.json(notes);
+                res.status(201).json(notes);
             }
         });
     });
@@ -56,16 +56,10 @@ module.exports = app => {
                     const parsedNotes = JSON.parse(data);
                     parsedNotes.push(newNote);
                     
-                    // Write the new JSON object into db.json
-                    fs.writeFile(
-                        './db/db.json',
-                        JSON.stringify(parsedNotes, null, 4),
-                        (writeErr) => {
-                          writeErr
-                            ? console.log(writeErr)
-                            : console.info('Successfully updated notes DB!');
-                        }
-                      );
+                    // Update the db.json file with updated parseNotes
+                    writeToFile(parsedNotes);
+
+                    console.info(`Successfully saved new note titled ${newNote.title}`);
                 }
             });
 
@@ -76,6 +70,33 @@ module.exports = app => {
         }
     })
 
+    // DELETE /api/notes/:id allows users to delete notes
+    
+    app.delete('/api/notes/:id', (req, res) => {
+        const reqId = req.params.id;
+        console.info(`${req.method} request received to /api/notes/:id endpoint. Deleting he note with id '${reqId}'...`);
+
+        // Obtain the existing notes
+        fs.readFile('db/db.json', 'utf8', (err, data) => {
+            if (err) {
+                console.log(err);
+            } else {
+                // Parse the data as a JSON object after successfully reading the file
+                const parsedNotes = JSON.parse(data);
+                
+                // Filter out the note with the requested id
+                const filteredNotes = parsedNotes.filter((note) => {
+                    if (note.id !== reqId) {
+                        return note;
+                    }
+                });
+
+                // Update the db.json file with the modified notes object
+                writeToFile(filteredNotes);
+            }
+        });
+    });
+
     // GET /notes should return the notes.html file
     app.get('/notes', (req, res) => {
         res.sendFile(path.join(__dirname, '../public/notes.html'));
@@ -85,4 +106,23 @@ module.exports = app => {
     app.get('*', (req, res) => {
         res.sendFile(path.join(__dirname, '../public/index.html'));
     });
+
+    /**
+     * writeToFile() function will update the 'db/db.json' file with the given parsedNotes parameter
+     * @param {*} parsedNotes 
+     */
+    function writeToFile(parsedNotes) {
+        const fileName = 'db/db.json';
+
+        // Write the new JSON object into db.json
+        fs.writeFile(
+            fileName,
+            JSON.stringify(parsedNotes, null, 4),
+            (writeErr) => {
+              writeErr
+                ? console.log(writeErr)
+                : console.info(`Successfully updated notes DB in ${fileName}!`);
+            }
+          );
+    }
 }

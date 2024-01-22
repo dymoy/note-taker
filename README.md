@@ -32,7 +32,7 @@ The following routes are implemented in the `routes.js` file:
 - [Questions](#questions)
   
 ## Installation 
-There is no installation necessary. You can visit the deployed application [here](https://dymoy-note-taker-d934ef0ed5cc.herokuapp.com/) and try it out! This application was deployed using .
+There is no installation necessary. You can visit the deployed application [here](https://dymoy-note-taker-d934ef0ed5cc.herokuapp.com/) and try it out! 
 
 If you would like to run the application locally, use the following steps:
 1. Clone this repository to your local machine. (For reference, visit the [Cloning a Repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) GitHub Docs article.)

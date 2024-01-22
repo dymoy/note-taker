@@ -1,128 +1,100 @@
-# 11 Express.js: Note Taker
+# Note Taker
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Your Task
+## Description 
+This web tool is a note-taking application that allows the user to view, save, and delete notes.  
 
-Your assignment is to modify starter code to create an application called Note Taker that can be used to write and save notes. This application will use an Express.js back end and will save and retrieve note data from a JSON file.
+The goal of this project is to utilize the Express.js back-end framework to build API routes with Node.js and to successfully deploy the application using [Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs). 
+  
+The following routes are implemented in the `routes.js` file:  
+- GET API route that will send all existing notes to the client:  
+`app.get('/api/notes', (req, res) => {...});`
 
-The application’s front end has already been created. It's your job to build the back end, connect the two, and then deploy the entire application to Heroku.
+- POST API route that will receive a new note to save on the request body, add it to the `db.json` file, and then return the new note to the client:  
+`app.post('/api/notes', (req, res) => {...});`
 
-## User Story
+- DELETE API route that will remove the note with the requested id paramater from the `db.json` file and then return the updated array of existing notes to the client:  
+`app.delete('/api/notes/:id', (req, res) => {})`
+
+- HTML route that returns the `notes.html` file:  
+`app.get('/notes', (req, res) => {...})`
+
+- HTML route that returns the `index.html` file:  
+`app.get('*', (req, res) => {})`  
+
+## Table of Contents 
+- [Installation](#installation)
+- [Dependencies](#dependencies)
+- [Usage](#usage)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
+- [Questions](#questions)
+  
+## Installation 
+There is no installation necessary. You can visit the deployed application [here](https://dymoy-note-taker-d934ef0ed5cc.herokuapp.com/) and try it out! This application was deployed using .
+
+If you would like to run the application locally, use the following steps:
+1. Clone this repository to your local machine. (For reference, visit the [Cloning a Repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) GitHub Docs article.)
+2. Run `npm install` in your CLI to download the npm package dependencies. 
+3. Run `node server.js` on your CLI to start the server.
+4. Open `http://localhost:3001` in your local browser. 
+  
+## Dependencies
+This project requires the following npm package dependencies:
+1. [Express](https://www.npmjs.com/package/express)
+2. [generateUniqueId](https://www.npmjs.com/package/generate-unique-id)
+  
+## Usage 
+Once the user has opened the [note-taker](https://dymoy-note-taker-d934ef0ed5cc.herokuapp.com/) application, they will see the landing page with a button to "Get Started".  
+![Landing Page Image](./Assets/note-taker_landing-page.png)  
+  
+After clicking the "Get Started" button, the user will be presented with a page that shows the existing notes listed in the left-hand column, plus empty fields to enter a new note title and the note’s text in the right-hand column.  
+![Image of a page with existing notes listed in the left-hand column and empty fields to enter new note in the right-hand column](./Assets/note-taker_notes-page.png)  
+  
+When the user enters a note title and note text, buttons to "Save Note" and "Clear Form" will appear at the top of the page. The "Clear Form" button will erase the entered title and text from the right-hand column.
+![Image of webpage with note title and note text entered, and buttons to "Save Note" and "Clear Form"](./Assets/note-taker_creating-note.png)  
+  
+After pressing the "Save Note" button, the newly created note appears in the left-hand column with the other existing notes, and the buttons in the navigation will disappear.  
+![Newly created note will appear in the left-hand column with the other existing notes](./Assets/note-taker_added-note.png)  
+  
+The user can view the other existing notes by clicking on the respective note item in the left-hand column. The image below shows the user viewing the note titled "Grocery List".  
+![Viewing existing notes image](./Assets/note-taker_view-note.png)  
+  
+If a note is no longer needed, the user can select the red trash icon for the respective note in the left-hand column. The corresponding note will be removed from the list. 
+  
+## Testing 
+The API routes in this application were tested with the [Insomnia](https://docs.insomnia.rest/) development platform. Please refer to the [Installation](#installation) section if you are interested in running and testing the application locally. 
+
+### GET  
+![Screenshot of Insomnia testing GET Route](./Assets/note-taker_GET.png)
+The screenshot above shows the response of the GET request to the `/api/notes` endpoint.
+
+### POST  
+![Screenshot of Insomnia testing POST Route](./Assets/note-taker_POST.png)  
+The screenshot above shows the response of the POST request to the `/api/notes` endpoint, given the request body shown below. The id for the note is generated using the [generate-unique-id](https://www.npmjs.com/package/generate-unique-id) npm package.
 
 ```
-AS A small business owner
-I WANT to be able to write and save notes
-SO THAT I can organize my thoughts and keep track of tasks I need to complete
+{
+	"title": "Appointment",
+	"text": "Dentist appointment on 1/28 @ 1PM"
+}
 ```
+  
+### DELETE  
+![Screenshot of Insomnia testing DELETE Route](./Assets/note-taker_DELETE.png)
+The screenshow above shows the response of the DELETE request to the `/api/notes/:id` endpoint, given the id paramater `0v3v`.
+  
+## Contributing
+To make contributions to this project:  
+1. Fork the repository  
+2. Make some commits to improve the application
+3. Open a Pull Request on GitHub
+4. From there, we can discuss your changes and merge the pull request once your contributions have been approved!
 
-## Acceptance Criteria
-
-```
-GIVEN a note-taking application
-WHEN I open the Note Taker
-THEN I am presented with a landing page with a link to a notes page
-WHEN I click on the link to the notes page
-THEN I am presented with a page with existing notes listed in the left-hand column, plus empty fields to enter a new note title and the note’s text in the right-hand column
-WHEN I enter a new note title and the note’s text
-THEN a "Save Note" button and a "Clear Form" button appear in the navigation at the top of the page
-WHEN I click on the Save button
-THEN the new note I have entered is saved and appears in the left-hand column with the other existing notes and the buttons in the navigation disappear
-WHEN I click on an existing note in the list in the left-hand column
-THEN that note appears in the right-hand column and a "New Note" button appears in the navigation
-WHEN I click on the "New Note" button in the navigation at the top of the page
-THEN I am presented with empty fields to enter a new note title and the note’s text in the right-hand column and the button disappears
-```
-
-## Mock-Up
-
-The following GIF shows the web application's appearance and functionality:
-
-![Existing notes are listed in the left-hand column with empty fields on the right-hand side for the new note’s title and text.](./Assets/11-express-homework-demo.gif)
-
-## Getting Started
-
-On the back end, the application should include a `db.json` file that will be used to store and retrieve notes using the `fs` module.
-
-The following HTML routes should be created:
-
-* `GET /notes` should return the `notes.html` file.
-
-* `GET *` should return the `index.html` file.
-
-The following API routes should be created:
-
-* `GET /api/notes` should read the `db.json` file and return all saved notes as JSON.
-
-* `POST /api/notes` should receive a new note to save on the request body, add it to the `db.json` file, and then return the new note to the client. You'll need to find a way to give each note a unique id when it's saved (look into npm packages that could do this for you).
-
-## Bonus
-
-You haven’t learned how to handle DELETE requests, but this application offers that functionality on the front end. As a bonus, try to add the DELETE route to the application using the following guideline:
-
-* `DELETE /api/notes/:id` should receive a query parameter that contains the id of a note to delete. To delete a note, you'll need to read all notes from the `db.json` file, remove the note with the given `id` property, and then rewrite the notes to the `db.json` file.
-
-## Grading Requirements
-
-> **Note**: If a Challenge assignment submission is marked as “0”, it is considered incomplete and will not count towards your graduation requirements. Examples of incomplete submissions include the following:
->
-> * A repository that has no code
->
-> * A repository that includes a unique name but nothing else
->
-> * A repository that includes only a README file but nothing else
->
-> * A repository that only includes starter code
-
-This Challenge is graded based on the following criteria:
-
-### Technical Acceptance Criteria: 40%
-
-* Satisfies all of the preceding acceptance criteria plus the following:
-
-  * Application front end must connect to an Express.js back end.
-
-  * Application back end must store notes that have a unique id in a JSON file.
-
-  * Application must be deployed to Heroku.
-
-### Deployment: 36%
-
-* Application deployed at live URL.
-
-* Application loads with no errors.
-
-* Application GitHub URL submitted.
-
-* GitHub repository contains application code.
-
-### Application Quality: 11%
-
-* Application console is free of errors.
-
-### Repository Quality: 13%
-
-* Repository has a unique name.
-
-* Repository follows best practices for file structure and naming conventions.
-
-* Repository follows best practices for class/id naming conventions, indentation, quality comments, etc.
-
-* Repository contains multiple descriptive commit messages.
-
-* Repository contains quality README file with description, screenshot, and link to deployed application.
-
-### Bonus: +10 Points
-
-Fulfilling the following can add up to 10 points to your grade. Note that the highest grade you can achieve is still 100:
-
-* Application allows users to delete notes.
-
-## Review
-
-You are required to submit BOTH of the following for review:
-
-* The URL of the functional, deployed application.
-
-* The URL of the GitHub repository, with a unique name and a README describing the project.
-
-- - -
-© 2024 edX Boot Camps LLC. Confidential and Proprietary. All Rights Reserved.
+## License 
+This GitHub repository is licensed under the MIT license. Please refer to the license documentation [here](https://opensource.org/licenses/MIT).
+  
+## Questions
+This project was created by [dymoy](https://github.com/dymoy).  
+For any related questions, please contact me via email at <derekymoy@gmail.com>.

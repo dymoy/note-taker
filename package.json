@@ -1,12 +1,12 @@
 {
   "name": "note-taker",
   "version": "1.0.0",
-  "description": "",
+  "description": "An application called Note Taker that can be used to write and save notes using Express.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Derek Moy <derekymoy@gmail.com",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.4",

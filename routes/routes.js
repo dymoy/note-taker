@@ -82,6 +82,7 @@ module.exports = app => {
             // Return the new note to the client with status code 201 Created
             const response = {
                 status: 'success',
+                message: 'Your new note was successfully created!',
                 body: newNote,
             };
 
@@ -128,6 +129,7 @@ module.exports = app => {
                 // Send a message to the client 
                 const response = {
                     status: 'success',
+                    message: `The note with id '${reqId}' was successfully deleted!`,
                     body: filteredNotes
                 }
 

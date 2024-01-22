@@ -15,13 +15,13 @@
         "id": "d24c"
     },
     {
-        "title": "Express.js Assignment ",
-        "text": "Objective: Note Taking Application \nDue: Thursday",
-        "id": "0v3v"
-    },
-    {
         "title": "Goals ",
         "text": "Try a new recipe every week \nGo to the gym 5 times a week ",
         "id": "c66q"
+    },
+    {
+        "title": "Appointment",
+        "text": "Dentist appointment on 1/28 @ 1PM",
+        "id": "ec5o"
     }
 ]
